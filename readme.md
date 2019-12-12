@@ -16,7 +16,7 @@ Set `middleware` meta key to your route and add our component to any vue router 
 Middleware function will retrieve all the variables passed to guard for your needs.
 
 ```js
-import VueRouteMiddleware from 'VueRouteMiddleware';
+import VueRouteMiddleware from 'vue-route-middleware';
 ...
 const Router = new VueRouter({
     mode: 'history',
