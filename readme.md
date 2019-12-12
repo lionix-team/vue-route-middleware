@@ -12,8 +12,8 @@ npm i vue-route-middleware
 
 
 ## Basic Usage:
-Set `middleware` meta key to your route and add our component to any vue router guard hook.  
-Middleware function will retrieve all the variables passed to guard for your needs.
+
+Set `middleware` meta key to your route and add our component to any vue router guard hook.
 
 ```js
 import VueRouteMiddleware from 'vue-route-middleware';
@@ -39,7 +39,13 @@ Router.beforeEach(VueRouteMiddleware());
 ```
 
 
-### Chain middlewares with array of functions:
+**NOTICE:** Middleware function will retrieve all the variables normally passed to the router guards  
+Example: (`to`, `from`, `next`) in case of `beforeEach` or (`to`, `from`) in case of `afterEach` guard.
+
+### Chain middlewares with an array of functions:
+
+#### Example:
+
 ```js
 middleware: [
     (to, from, next) => {
@@ -59,25 +65,41 @@ middleware: [
 ```
 
 
-### Or just:
+**NOTICE:** If function returns `false` then the middleware chain will break and no longer execute.
+
+
+### Separated middleware file example:
+
+#### ./route/middleware/auth.js
+
+```js
+export default (to, from, next) => {
+    let auth = fakeUser.isLogged();
+    if(!auth){
+        next({ name: 'Login' });
+        return false;
+    }
+}
+```
+
+#### router.js
 
 ```js
 import AuthMiddleware from './route/middleware/auth';
-import PaymentMiddleware from './route/middleware/payment';
 ...
 meta: {
-    middleware: [ AuthMiddleware, PaymentMiddleware ]
+    middleware: [ AuthMiddleware ]
 }
 ...
 ```
 
-**NOTICE:** If function returns `false` then middleware chain will break and no longer execute.
-
 
 ## Advanced:
 
-Another way to define middleware, is to pass them in the object as first parameter to  
+Another way to define middlewares is to pass them in the object as the first parameter to  
 **VueRouteMiddleware** function and pass an array of middleware key names to the meta of the route.
+
+#### Example:
 
 ```js
 import AuthMiddleware from './route/middleware/auth';
@@ -90,8 +112,10 @@ meta: {
 Router.beforeEach(VueRouteMiddleware({ AuthMiddleware, PaymentMiddleware }));
 ```
 
-This way we can differentiate middlewares that will be applied with differend guards.  
+This way we can differentiate middlewares that will be applied with different guards.  
 For example you want to add tracking middleware to `afterEach` guard:
+
+#### Example:
 
 ```js
 import AuthMiddleware from './route/middleware/auth';
