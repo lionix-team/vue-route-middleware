@@ -96,7 +96,7 @@ For example you want to add tracking middleware to `afterEach` guard:
 ```js
 import AuthMiddleware from './route/middleware/auth';
 import PaymentMiddleware from './route/middleware/payment';
-import TrackingMiddleware from './route/middleware/payment';
+import TrackingMiddleware from './route/middleware/tracking';
 ...
 meta: {
     // define all applied middleware to the route
