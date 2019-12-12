@@ -79,7 +79,7 @@ meta: {
 Another way to define middleware, is to pass them in the object as first parameter to  
 **VueRouteMiddleware** function and pass an array of middleware key names to the meta of the route.
 
-```js;
+```js
 import AuthMiddleware from './route/middleware/auth';
 import PaymentMiddleware from './route/middleware/payment';
 ...
@@ -93,7 +93,7 @@ Router.beforeEach(VueRouteMiddleware({ AuthMiddleware, PaymentMiddleware }));
 This way we can differentiate middlewares that will be applied with differend guards.  
 For example you want to add tracking middleware to `afterEach` guard:
 
-```js;
+```js
 import AuthMiddleware from './route/middleware/auth';
 import PaymentMiddleware from './route/middleware/payment';
 import TrackingMiddleware from './route/middleware/payment';
