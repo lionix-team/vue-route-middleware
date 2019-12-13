@@ -1,6 +1,6 @@
 {
   "name": "vue-route-middleware",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Make complex route middleware logic look easy and readable!",
   "main": "src/index.js",
   "repository": {
