@@ -10,6 +10,7 @@ class VueRouteMiddleware {
      * @param {function|undefined} next
      * 
      * @var {object} middlewares // predefined middlewares
+     * @var {boolean} nextHasCalled // if next was called in the middlewares
      * @var {array} toMiddleware // arguments passed to middleware function
      */
     constructor(definedMiddlewares, to, from, next){
@@ -19,10 +20,42 @@ class VueRouteMiddleware {
             this._error(`Defined middlewares must be of type Object!`);
             this.middlewares = {};
         }
-        this.toMiddleware = [ to, from, next ];
-        if(to && to.matched) to.matched.every(route => this.applyRouteMiddlewares(route));
-        if(next) next();
+        this.to = to;
+        this.from = from;
+        this.next = next;
+        this.nextHasCalled = false;
+        if(this.to && this.to.matched){ // Apply middleware if anu route matched
+            to.matched.every(route => this.applyRouteMiddlewares(route));
+        }
+        if(this.next && !this.nextHasCalled){ // call next if user didnt call it
+            this.callNext();
+        }
     }
+
+    /**
+     * Function used to pass arguments to middlewares with spred syntax
+     * 
+     * @return {array}
+     */
+    toMiddleware(){
+        return [ 
+            this.to, 
+            this.from, 
+            this._isFunction(this.next) ? 
+                this.callNext.bind(this) : undefined
+        ];
+    }
+
+    /**
+     * Function that is passed to middleware as a next function wrapper
+     * toggling `nextHasCalled` trigger
+     * 
+     * @param  {...any} args
+     */
+    callNext(...args){
+        if(!this.nextHasCalled) this.nextHasCalled = true;
+        return this.next(...args);
+    };
 
     /**
      * Fuction applying middlewares of a single route and deciding
@@ -53,7 +86,7 @@ class VueRouteMiddleware {
      * @return {boolean}
      */
     applyMiddleware(middleware){
-        const result = this.getMiddleware(middleware)(...this.toMiddleware);
+        const result = this.getMiddleware(middleware)(...this.toMiddleware());
         return result === undefined ? true : result;
     }
 
