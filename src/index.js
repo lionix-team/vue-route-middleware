@@ -17,7 +17,7 @@ class VueRouteMiddleware {
         if(this._isObject(definedMiddlewares)){
             this.middlewares = definedMiddlewares;
         } else {
-            this._error(`Defined middlewares must be of type Object!`);
+            this._error('Defined middlewares must be of type Object!');
             this.middlewares = {};
         }
         this.to = to;
@@ -105,13 +105,13 @@ class VueRouteMiddleware {
                 if(this._isFunction(this.middlewares[middleware])){
                     return this.middlewares[middleware];
                 } else {
-                    this._error(`'${middleware}' is not a function!`);
+                    this._error(middleware+' is not a function!');
                 }
             }
         } else if(this._isFunction(middleware)) {
             return middleware;
         } else {
-            this._error(`All middlewares must be functions!`);
+            this._error('All middlewares must be functions!');
         }
         return () => true;
     }
@@ -122,7 +122,7 @@ class VueRouteMiddleware {
      * @return {boolean}
      */
     _error(text){
-        console.error(`${this.constructor.name}: ${text}`);
+        console.error(this.constructor.name + ': '+text);
     }
 
     /**
